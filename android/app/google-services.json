@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "381158896060",
+    "firebase_url": "https://shopping-list-7dcf0.firebaseio.com",
+    "project_id": "shopping-list-7dcf0",
+    "storage_bucket": "shopping-list-7dcf0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381158896060:android:b8a17fb327c25095d73bb9",
+        "android_client_info": {
+          "package_name": "fun.partyplanner.shopping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381158896060-p875dtajsf9bc5saaheifn2bh6e5kib2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKW35UFQA1iXZjqR7ZtPYOwm2u7Tc6B60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381158896060-p875dtajsf9bc5saaheifn2bh6e5kib2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
