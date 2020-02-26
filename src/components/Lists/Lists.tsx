@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import NoLists from './NoLists'
-import { List, ListItem } from '@ui-kitten/components'
+import { List, ListItem, Button } from '@ui-kitten/components'
+import CreateListModal from './CreateListModal'
 
 export interface List {
     key: string;
@@ -14,18 +15,31 @@ interface ListsProps {
 }
 
 const Lists = (props: ListsProps) => {
-    const compositeListItem = ({ item, index }: {item: List, index: number}) => {
+    const compositeListItem = ({ item, index }: { item: List, index: number }) => {
         return (
             <ListItem title={item.name}></ListItem>
         )
     }
-    
+
+    const [visible, setVisible] = useState(false);
+
+    const toggleModal = () => {
+        setVisible(!visible);
+    }
+
+
 
     console.log(props.lists);
-    if(!props.lists.length) {
+    if (!props.lists.length) {
         return <NoLists />
     } else {
-        return <List data={props.lists} renderItem={compositeListItem} />
+        return (
+            <>
+                <Button style={{ marginBottom: 32 }} appearance="outline" onPress={toggleModal}>Dodaj listę</Button>
+                <CreateListModal visible={visible} dismissModal={toggleModal} />
+                <List data={props.lists} renderItem={compositeListItem} />
+            </>
+        )
     }
 }
 
