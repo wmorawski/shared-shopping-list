@@ -24,7 +24,7 @@ const BottomTabBar = ({navigation, state}: {navigation: any, state: any}) => {
         selectedIndex={state.index}
         onSelect={onSelect}>
         <BottomNavigationTab icon={(style) => <Icon {...style} name='home-outline' />} />
-        <BottomNavigationTab icon={(style) => <Icon {...style} name='clock-outline' />} />
+        <BottomNavigationTab icon={(style) => <Icon {...style} name='trash-outline' />} />
       </BottomNavigation>
     </SafeAreaView>
   );

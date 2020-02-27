@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { Layout, Spinner } from '@ui-kitten/components';
-import Lists from '../../components/Lists/Lists';
+import Products from '../../components/Products/Products';
 
 
 export const HomeScreen = () => {
-  const [lists, setLists] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const alignItems = lists.length ? 'stretch' : 'center';
+  const alignItems = products.length ? 'stretch' : 'center';
 
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('lists')
-      .where('archived', '==', false)
+      .collection('products')
+      .orderBy('createdAt', 'desc')
+      .where('deleted', '==', false)
       .onSnapshot((querySnapshot) => {
-        console.log(querySnapshot)
-        const lists = querySnapshot.docs.map(doc => {
-          return {
-            ...doc.data(),
-            key: doc.id
+        console.log(querySnapshot);
+          const products = querySnapshot.docs.map(doc => {
+            return {
+              ...doc.data(),
+              key: doc.id
+            }
+          })
+  
+          setProducts(products)
+          if (loading) {
+            setLoading(false)
           }
-        })
 
-        setLists(lists)
-        if (loading) {
-          setLoading(false)
-        }
       })
     return () => unsubscribe();
   }, []);
@@ -33,7 +35,7 @@ export const HomeScreen = () => {
 
   return (
     <Layout style={{ flex: 1, justifyContent: "center", alignItems }}>
-      {loading ? <Spinner size="giant" /> : <Lists lists={lists} />}
+      {loading ? <Spinner size="giant" /> : <Products products={products} />}
     </Layout>
   );
 };
