@@ -1,41 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import { Layout, Spinner } from '@ui-kitten/components';
-import Products from '../../components/Products/Products';
+import {Layout, Spinner} from '@ui-kitten/components';
+import ProductsOnList from '../../components/ProductsOnList/ProductsOnList';
+import {mapWithId} from '../../services/firestore.service';
 
-
-export const HomeScreen = () => {
+export const HomeScreen = ({navigation}: {navigation: any}) => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const alignItems = products.length ? 'stretch' : 'center';
 
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('products')
-      .orderBy('createdAt', 'desc')
+      .collection('productsOnList')
       .where('deleted', '==', false)
-      .onSnapshot((querySnapshot) => {
-        console.log(querySnapshot);
-          const products = querySnapshot.docs.map(doc => {
-            return {
-              ...doc.data(),
-              key: doc.id
-            }
-          })
-  
-          setProducts(products)
-          if (loading) {
-            setLoading(false)
-          }
-
-      })
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(querySnapshot => {
+        const products = querySnapshot.docs.map(mapWithId);
+        setProducts(products);
+        if (loading) {
+          setLoading(false);
+        }
+      });
     return () => unsubscribe();
-  }, []);
-
+  }, [loading]);
 
   return (
-    <Layout style={{ flex: 1, justifyContent: "center", alignItems }}>
-      {loading ? <Spinner size="giant" /> : <Products products={products} />}
+    <Layout
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems,
+        paddingHorizontal: 8,
+      }}>
+      {loading ? (
+        <Spinner size="giant" />
+      ) : (
+        <ProductsOnList navigation={navigation} products={products} />
+      )}
     </Layout>
   );
 };

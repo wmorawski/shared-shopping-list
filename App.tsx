@@ -1,51 +1,39 @@
 import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   ApplicationProvider,
   IconRegistry,
-  Icon,
-  TopNavigationAction,
-  TopNavigation,
+  Spinner,
 } from '@ui-kitten/components';
-import {mapping, light, dark} from '@eva-design/eva';
+import {dark, light, mapping} from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {AppNavigator} from './src/navigations/main.navigation';
-import {ThemeContext} from './ThemeContext';
-
+import auth from '@react-native-firebase/auth';
+import {LoginScreen} from './src/scenes/Auth/Login';
+import {theme} from './theme';
 
 declare var global: {HermesInternal: null | {}};
 export const themes: {[key: string]: any} = {light, dark};
 
 const App = () => {
-  const [theme, setTheme] = useState('dark');
-  const currentTheme = themes[theme];
-  const toggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(nextTheme);
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  const onAuthStateChanged = (user: any) => {
+    setUser(user);
+    initializing && setInitializing(false);
   };
 
-  const ToggleButton = () => [
-    <TopNavigationAction
-      onPress={toggleTheme}
-      icon={style => (
-        <Icon
-          {...style}
-          fill={theme === 'light' ? currentTheme['color-info-400'] : currentTheme['color-warning-400']}
-          name={theme === 'dark' ? 'sun-outline' : 'moon-outline'}
-        />
-      )}></TopNavigationAction>,
-  ];
-
+  useEffect(() => {
+    return auth().onAuthStateChanged(onAuthStateChanged);
+  }, []);
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
-      <ThemeContext.Provider value={{theme, toggleTheme}}>
-        <ApplicationProvider mapping={mapping} theme={currentTheme}>
-          <TopNavigation rightControls={ToggleButton()}></TopNavigation>
-          <AppNavigator />
-        </ApplicationProvider>
-      </ThemeContext.Provider>
+      <ApplicationProvider mapping={mapping} theme={theme}>
+        {initializing ? <Spinner /> : user ? <AppNavigator /> : <LoginScreen />}
+      </ApplicationProvider>
     </>
   );
 };
